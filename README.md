@@ -100,6 +100,13 @@ IPC通道使用命名管道或Domain Socket创建的，它们与网络socket的�
 
 父进程在创建子进程之前，会先创建IPC并监听它，然后才真正的创建出子进程，并通过环境变量（NODE_CHANNEL_FD)告诉子进程这个IPC通道的文件描述符，子进程在启动的过程中，根据文件描述符去连接这个已经存在的IPC通道，从而完成父子进程之间的连接。
 
+子进程对象send()方法可以发送的句柄类型如下：
+* net.Socket  TCP套接字
+* net.Server  TCP服务器。
+* net.Native  C++层面得TCP套接字或IPC管道
+* dgram.Socket  UDP套接字
+* dgram.native  C++层面的UPD套接字
+
 搭建集群需要考虑点：
 
 * 性能问题
@@ -108,5 +115,5 @@ IPC通道使用命名管道或Domain Socket创建的，它们与网络socket的�
 * 配置或者静态数据的动态重新载入
 * 其他细节问题
 
-
+cluster模块是child_process和net模块的组合应用，cluster内部会隐式创建TCP服务器，关于这点上，它没办法像child_process可以灵活的控制进程，甚至控制多组工作进程，原因在于它可以隐式的创建多个TCP服务。
 
